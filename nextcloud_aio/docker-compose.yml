@@ -1,0 +1,32 @@
+volumes:
+  nextcloud_aio_mastercontainer:
+    external: true
+  nc-data:
+    external: true
+networks:
+  proxy:
+    external: true      
+
+services:
+  nextcloud:
+    image: nextcloud/all-in-one:latest
+    restart: unless-stopped
+    container_name: nextcloud-aio-mastercontainer
+    security_opt:
+      - no-new-privileges:true
+    volumes:
+      - nextcloud_aio_mastercontainer:/mnt/docker-aio-config
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - nc-data:/mnt/ncdata
+    ports:
+      - 8081:8080
+      - 8443:443 
+    networks:
+      - proxy
+    environment:
+      - APACHE_PORT=11000
+      - NEXTCLOUD_DATADIR=/mnt/ncdata  
+      - NEXTCLOUD_MEMORY_LIMIT=1024M   
+      - PHP_MEMORY_LIMIT=1024M
+      - PHP_UPLOAD_LIMIT=1024M  
+      - host.docker.internal:11000  

@@ -1,0 +1,38 @@
+services:
+  homepage:
+    image: ghcr.io/gethomepage/homepage:latest
+    container_name: homepage
+    ports:
+      - 3000:3000
+    volumes:
+      - ./config:/app/config # Make sure your local config directory exists
+      - /var/run/docker.sock:/var/run/docker.sock:ro # optional, for docker integrations
+    env_file:
+      - .env
+    environment:
+      - DOMAIN
+      - HOMEPAGE_VAR_DOMAIN
+      - HOMEPAGE_VAR_PROXMOX_USER
+      - HOMEPAGE_VAR_PROXMOX_PASS
+      - HOMEPAGE_VAR_JELLY_KEY
+      - HOMEPAGE_VAR_PORTAINER_KEY
+      - HOMEPAGE_VAR_TRAEFIK_USER
+      - HOMEPAGE_VAR_TRAEFIK_PASS
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.home.entrypoints=web, websecure"
+      - "traefik.http.routers.home.rule=Host(`roll.$DOMAIN`)"
+      - "traefik.http.routers.home.tls=true"
+      - "traefik.http.routers.home.tls.certresolver=production"
+      - "traefik.http.services.home.loadbalancer.server.port=3000"
+      - "traefik.http.routers.home.middlewares=authMiddle"
+      - "traefik.http.middlewares.authMiddle.basicauth.users=mike:$$apr1$$0fryilnh$$Gqyed.vMClgeYg.RvWZMr."  
+    networks:
+      - proxy
+networks:
+  proxy:
+    external: true
+

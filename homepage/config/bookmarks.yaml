@@ -1,0 +1,40 @@
+---
+# For configuration options and examples, please see:
+# https://gethomepage.dev/latest/configs/bookmarks
+
+- Developer:
+    - ChatGPT:
+        - abbr: CG
+          href: https://chat.openai.com/
+    - Github:
+        - abbr: GH
+          href: https://github.com/
+    - Linux Questions:
+        - abbr: LQ
+          href: https://www.linuxquestions.org/questions/
+    - Server World:
+        - abbr: SW
+          href: https://www.server-world.info/en/
+    - Bash Manual:
+        - abbr: BM
+          href: https://www.gnu.org/software/bash/manual/html_node/Indexes.html
+
+- Entertainment:
+    - YouTube:
+        - abbr: YT
+          href: https://youtube.com/
+    - IlCorsaroNero:
+        - abbr: ICN
+          href: https://ilcorsaronero.theproxy.lol/
+    - ThePirateBay:
+        - abbr: TPB
+          href: https://thepiratebaye.org/
+
+- Tools:
+    - OnShape:
+        - abbr: OS
+          href: https://cad.onshape.com/signin
+    - Murena:
+        - abbr: MR
+          href: https://murena.io/login
+   

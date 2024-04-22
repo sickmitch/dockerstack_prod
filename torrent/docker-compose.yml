@@ -1,0 +1,34 @@
+
+services:
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent:latest
+    container_name: torrent
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+      - WEBUI_PORT=8082
+    volumes:
+      - ./config:/config
+      - /mnt/video:/downloads
+    ports:
+      - 8082:8080
+      - 58676:58676
+      - 58676:58676/udp  
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.torrent.entrypoints=web, websecure"
+      - "traefik.http.routers.torrent.rule=Host(`torrent.${DOMAIN}`)"
+      - "traefik.http.routers.torrent.tls=true"
+      - "traefik.http.routers.torrent.tls.certresolver=production"
+      - "traefik.http.services.torrent.loadbalancer.server.port=8082"
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - proxy
+    restart: unless-stopped
+
+networks:
+  proxy:
+    external: true
+

@@ -1,0 +1,26 @@
+
+services:
+  vault:
+    image: vaultwarden/server:latest
+    container_name: vaultwarden
+    security_opt:
+      - no-new-privileges:true
+    environment: 
+      - TZ=Europe/Rome
+      - SIGNUPS_ALLOWED=false  
+    volumes:
+      - /mnt/vault:/data
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.vault.entrypoints=web, websecure"
+      - "traefik.http.routers.vault.rule=Host(`vault.${DOMAIN}`)"
+      - "traefik.http.routers.vault.tls=true"
+      - "traefik.http.routers.vault.tls.certresolver=production"
+      - "traefik.http.services.vault.loadbalancer.server.port=80"
+    networks:
+      - proxy
+    restart: unless-stopped
+
+networks:
+  proxy:
+    external: true

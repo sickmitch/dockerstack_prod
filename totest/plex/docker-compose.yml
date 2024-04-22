@@ -1,0 +1,36 @@
+version: "2"
+
+services:
+  plex:
+    image: plexinc/pms-docker
+    container_name: plex
+    environment:
+      - TZ=Europe/Rome
+      - VERSION=docker
+      - ADVERTISE_IP="https://192.168.1.51:32400/"  
+      - PLEX_CLAIM=claim-fhdihsNCUKMPzts47AyU
+    volumes:
+      - ./config:/config
+      - /mnt/video/serie-tv/:/tv
+      - /mnt/video/film/:/movies
+    devices:
+      - /dev/dri/renderD128:/dev/dri/renderD128
+      - /dev/dri/card0:/dev/dri/card0
+    restart: unless-stopped
+    ports:
+      - 32400:32400
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.plex.entrypoints=web, websecure"
+      - "traefik.http.routers.plex.rule=Host(`plex.sickmitch.cc`)"
+      - "traefik.http.routers.plex.tls=true"
+      - "traefik.http.routers.plex.tls.certresolver=production"
+      - "traefik.http.services.plex.loadbalancer.server.port=32400"
+    networks:
+      - proxy
+    security_opt:
+      - no-new-privileges:true
+
+networks:
+  proxy:
+    external: true

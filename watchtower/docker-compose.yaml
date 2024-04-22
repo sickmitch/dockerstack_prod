@@ -1,0 +1,23 @@
+services:
+  watchtower:
+    image: containrrr/watchtower:latest
+    container_name: watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports: 
+      - 8082:8080
+    environment:
+      - TZ=Europe/Rome
+      - WATCHTOWER_CLEANUP=true # Removes old images after updating
+      - WATCHTOWER_POLL_INTERVAL=3600 # Check every hour
+      - WATCHTOWER_NOTIFICATIONS=shoutrrr
+      - WATCHTOWER_NOTIFICATION_URL=${NOTIFICATION_URL}
+    restart: always
+    networks:
+      - proxy
+    security_opt:
+      - no-new-privileges:true
+networks:
+  proxy:
+    external: true
+

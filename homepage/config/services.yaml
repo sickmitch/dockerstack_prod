@@ -1,0 +1,76 @@
+---
+# For configuration options and examples, please see:
+# https://gethomepage.dev/latest/configs/services
+
+- Homelab:
+    - Proxmox:
+        icon: proxmox.png
+        href: https://192.168.1.21:8006
+        description: Proxmox VE
+          #        widget:
+          #          type: proxmox
+          #          url: https://192.168.1.21:8006
+          #          username: {{HOMEPAGE_VAR_PROXMOX_USER}}
+          #          password: {{HOMEPAGE_VAR_PROXMOX_PASS}}
+          #          fields: ["vms", "lxc", "resources.cpu", "resources.mem"]  
+    - Portainer:
+        icon: portainer.svg
+        href: https://portainer.{{HOMEPAGE_VAR_DOMAIN}}/#!/2/docker/dashboard
+        widget:
+          type: portainer
+          url: https://portainer.{{HOMEPAGE_VAR_DOMAIN}}
+          env: 2
+          key: {{HOMEPAGE_VAR_PORTAINER_KEY}}
+
+- Monitoring/Backups:
+    - Traefik:      
+        icon: traefik.svg
+        href: https://traefik.{{HOMEPAGE_VAR_DOMAIN}}
+        description: Traefik Dashboard
+        widget:
+          type: traefik
+          url: https://traefik.{{HOMEPAGE_VAR_DOMAIN}}
+          username: {{HOMEPAGE_VAR_TRAEFIK_USER}} # optional
+          password: {{HOMEPAGE_VAR_TRAEFIK_PASS}} # optional
+            #    - Crowdsec:
+            #        icon: crowdsec.svg
+            #        href: http://192.168.1.51:3001/d/hjmZdB4nk/crowdsec-overview?orgId=1
+            #        description: Crowdsec Dashboard
+            #        widget:
+            #          type: grafana
+            #          url: http://192.168.1.51:3001
+            #          username: admin
+            #          password: sickmitch93!
+            #          fields: ["totalalerts", "HOMEPAGE_VAR_alertstriggered"]
+    - Borg Backups Status:
+        icon: https://healthchecks.io/b/3/19634737-94bd-407a-ad9b-cbc6d75a1c9f.svg
+        href: https://healthchecks.io/checks/bc32a8c5-ce8c-4c36-bcbb-2663f52d8c83/details/
+    - B2 Backblaze:
+        icon: https://healthchecks.io/b/3/37714a2b-04fb-49e2-a303-68e47cacbfd8.svg
+        href: https://tree-ams5-0000.secure.backblaze.com/b2_browse_files2.htm?bucketId=7114bb34829b192b8cea0c1c
+  
+- Services:
+    - Nextcloud:
+        icon: nextcloud.svg
+        href: https://nextcloud.{{HOMEPAGE_VAR_DOMAIN}}
+        description: Nextcloud
+    - Jellyfin:
+        icon: jellyfin.svg
+        href: https://jellyfin.{{HOMEPAGE_VAR_DOMAIN}}
+        description: Jellyfin
+          #        widget:
+          #          type: jellyfin
+          #          url: https://jellyfin.{{HOMEPAGE_VAR_DOMAIN}}
+          #          key: {{HOMEPAGE_VAR_JELLY_KEY}}
+          #          enableBlocks: true # optional, defaults to false
+          #          enableNowPlaying: true # optional, defaults to true  
+          #          fields: ["movies", "HOMEPAGE_VAR_series"]  
+    - Nicotine:
+        icon: https://nicotine-plus.org/pynicotine/gtkgui/icons/hicolor/scalable/apps/org.nicotine_plus.Nicotine.svg
+        href: https://nicotine.{{HOMEPAGE_VAR_DOMAIN}}
+        description: Nicotine
+    - Vaultwarden:
+        icon: vaultwarden.svg
+        href: https://vault.{{HOMEPAGE_VAR_DOMAIN}}
+        description: Vaultwarden
+

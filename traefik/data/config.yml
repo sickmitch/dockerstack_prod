@@ -1,0 +1,57 @@
+http:
+  routers:
+    nextcloud:
+      entrypoints:
+        - "web"
+        - "websecure"  
+      rule: Host(`nextcloud.{{env "DOMAIN"}}`)
+      middlewares:
+        - https-redirect
+        - nextcloud-secure-headers
+      tls:
+        domains:
+          - main: nextcloud.{{env "DOMAIN"}}
+        certresolver: production    
+      service: nextcloud
+    proxmox-rtr:
+      rule: Host(`pve.{{env "DOMAIN"}}`)
+      entryPoints:
+        - "web"
+        - "websecure"  
+      service: proxmox-svc
+      tls:
+        certResolver: production
+  services:
+    nextcloud:
+      loadBalancer:
+        servers:
+          - url: "http://192.168.1.51:11000"
+        passHostHeader: true
+    proxmox-svc:
+      loadBalancer:
+        passHostHeader: true
+        serversTransport: "pve"
+        servers:
+          - url: "https://192.168.1.21:8006"
+
+  serversTransports:
+    pve:
+      insecureSkipVerify: true
+
+  middlewares:
+    crowdsec-bouncer:
+      forwardauth:
+        address: http://bouncer-traefik:8080/api/v1/forwardAuth
+        trustForwardHeader: true
+    https-redirect:
+      redirectScheme:
+        scheme: https
+        permanent: true
+    nextcloud-secure-headers:
+      headers:
+        hostsProxyHeaders:
+          - "X-Forwarded-Host"
+        referrerPolicy: "same-origin"
+        customResponseHeaders:
+          X-Robots-Tag: "noindex, nofollow"
+

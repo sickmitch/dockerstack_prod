@@ -1,0 +1,34 @@
+
+services:
+  nicotine:
+    image: cproensa/nicotine-docker:latest
+    container_name: nicotine
+    security_opt:
+      - no-new-privileges:true
+    environment: 
+      - TZ=Europe/Rome
+      - PUID=1000
+      - PGID=1000  
+    ports: 
+      - 6080:6080
+      - 2234:2234
+    volumes:
+      - /mnt/nicotine/downloads/:/data/nicotine/downloads/
+      - /mnt/nicotine/configs/:/data/config/nicotine/
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.nicotine.entrypoints=web, websecure"
+      - "traefik.http.routers.nicotine.rule=Host(`nicotine.${DOMAIN}`)"
+      - "traefik.http.routers.nicotine.tls=true"
+      - "traefik.http.routers.nicotine.tls.certresolver=production"
+      - "traefik.http.services.nicotine.loadbalancer.server.port=6080"
+      - "traefik.http.routers.nicotine.middlewares=authMiddle"
+      - "traefik.http.middlewares.authMiddle.basicauth.users=mike:$$apr1$$0fryilnh$$Gqyed.vMClgeYg.RvWZMr."  
+    networks:
+      - proxy
+    restart: unless-stopped
+
+networks:
+  proxy:
+    external: true
+

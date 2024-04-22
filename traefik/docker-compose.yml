@@ -1,0 +1,35 @@
+services:
+  traefik:
+    image: docker.io/traefik:latest
+    container_name: traefik
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - proxy
+    ports:
+      - 80:80
+      - 443:443
+      - 8080:8080
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./data/traefik.yml:/traefik.yml:ro
+      - ./data/config.yml:/config.yml
+      - ./data/letsencrypt:/letsencrypt
+      - ./logs:/var/log/traefik
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      - DOMAIN
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.traefik.tls=true"
+      - "traefik.http.routers.traefik.tls.certresolver=production"
+      - "traefik.http.routers.traefik.entrypoints=web, websecure"
+      - "traefik.http.routers.traefik.rule=Host(`traefik.${DOMAIN}`)"
+      - "traefik.http.routers.traefik.service=api@internal"
+      - "traefik.http.routers.traefik.middlewares=authMiddle"
+      - "traefik.http.middlewares.authMiddle.basicauth.users=mike:$$apr1$$0fryilnh$$Gqyed.vMClgeYg.RvWZMr."  
+      
+networks:
+  proxy:
+    external: true

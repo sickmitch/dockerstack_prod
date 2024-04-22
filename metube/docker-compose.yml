@@ -1,0 +1,26 @@
+services:
+  metube:
+    image: ghcr.io/alexta69/metube
+    container_name: metube
+    security_opt:
+      - no-new-privileges:true
+    restart: unless-stopped
+    ports:
+      - "8083:8081"
+    volumes:
+      - /mnt/metube:/downloads
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.metube.entrypoints=web, websecure"
+      - "traefik.http.routers.metube.rule=Host(`metube.${DOMAIN}`)"
+      - "traefik.http.routers.metube.tls=true"
+      - "traefik.http.routers.metube.tls.certresolver=production"
+      - "traefik.http.services.metube.loadbalancer.server.port=8083"
+      - "traefik.http.routers.metube.middlewares=authMiddle"
+      - "traefik.http.middlewares.authMiddle.basicauth.users=mike:$$apr1$$0fryilnh$$Gqyed.vMClgeYg.RvWZMr."
+    networks:
+      - proxy
+
+networks:
+  proxy:
+    external: true
